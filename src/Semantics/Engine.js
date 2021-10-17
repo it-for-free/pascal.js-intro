@@ -51,15 +51,15 @@ export class Engine
     evaluateTerm(expression)
     {
         if (expression instanceof Multiplication) {
-            let leftOperand = this.evaluateMultiplier(expression.left);
-            let rightOperand = this.evaluateMultiplier(expression.right);
+            let leftOperand = this.evaluateTerm(expression.left);
+            let rightOperand = this.evaluateTerm(expression.right);
 
             let result = leftOperand.value * rightOperand.value;
 
             return new NumberVariable(result);
         } else if (expression instanceof Division) {
-            let leftOperand = this.evaluateMultiplier(expression.left);
-            let rightOperand = this.evaluateMultiplier(expression.right);
+            let leftOperand = this.evaluateTerm(expression.left);
+            let rightOperand = this.evaluateTerm(expression.right);
             let result = leftOperand.value / rightOperand.value;
 
             return new NumberVariable(result);

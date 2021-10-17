@@ -23,6 +23,6 @@ let syntaxAnalyzer = new SyntaxAnalyzer(lexicalAnalyzer);
 syntaxAnalyzer.analyze();
 
 let trees = syntaxAnalyzer.trees;
-console.log(trees);
+
 let engine = new Engine(trees);
 engine.run();
