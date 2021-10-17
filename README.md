@@ -4,11 +4,7 @@
 ```shell
 node  --es-module-specifier-resolution=node run.js
 ```
-
-
 ## Учебные задачи
-
-
 ### 1. Унарный минус
 
 Добавить поддержку вычислений выражений вида:
