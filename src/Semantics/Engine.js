@@ -7,9 +7,17 @@ import { NumberVariable } from './Variables/NumberVariable';
 
 export class Engine
 {
+    /**
+     * Результаты вычислений (изначально - один для каждой строки)
+     * 
+     * @type string[]
+     */
+    results;
+
     constructor(trees)
     {
         this.trees = trees;
+        this.results = [];
     }
 
     run()
@@ -22,6 +30,7 @@ export class Engine
             {
                 let result = self.evaluateSimpleExpression(tree);
                 console.log(result.value);
+                self.results.push(result.value); // пишем в массив результатов
             }
         );
 

@@ -1,5 +1,11 @@
 {
     "name": "pascal-js-intro",
     "description": "How to start code PascalJS",
-    "type": "module"
+    "type": "module",
+    "devDependencies": {
+        "jest": "^27.2.5"
+    },
+    "scripts": {
+        "test": "node --experimental-vm-modules node_modules/.bin/jest tests/__tests__"
+    }
 }
