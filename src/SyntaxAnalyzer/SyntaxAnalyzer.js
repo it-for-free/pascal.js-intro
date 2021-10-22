@@ -21,12 +21,6 @@ export class SyntaxAnalyzer
         this.symbol = this.lexicalAnalyzer.nextSym();
     }
 
-    anotherSymbolExpected(expectedSymbol)
-    {
-        let description = this.symbolsDescription.getSymbolTextByCode(expectedSymbol);
-        let errorText = `'${description}' expected but '${this.symbol.stringValue}' found.`;
-    }
-
     accept(expectedSymbolCode)
     {
         if (this.symbol.symbolCode === expectedSymbolCode) {
@@ -57,6 +51,7 @@ export class SyntaxAnalyzer
     scanExpression()
     {
         let term = this.scanTerm();
+        let operationSymbol = null;
 
         while ( this.symbol !== null &&
                 this.symbol.symbolCode !== SymbolsCodes.endOfLine  && (
@@ -64,14 +59,15 @@ export class SyntaxAnalyzer
                     this.symbol.symbolCode === SymbolsCodes.minus
                 )) {
 
-            switch (this.symbol.symbolCode) {
+            operationSymbol = this.symbol;
+            this.nextSym();
+
+            switch (operationSymbol.symbolCode) {
                 case SymbolsCodes.plus:
-                    this.nextSym();
-                    term = new Addition(this.symbol, term, this.scanTerm());
+                    term = new Addition(operationSymbol, term, this.scanTerm());
                     break;
                 case SymbolsCodes.minus:
-                    this.nextSym();
-                    term = new Subtraction(this.symbol, term, this.scanTerm());
+                    term = new Subtraction(operationSymbol, term, this.scanTerm());
                     break;
             }
         }
@@ -82,23 +78,23 @@ export class SyntaxAnalyzer
     scanTerm()
     {
         let term = this.scanMultiplier();
-        let symbolCode = null;
+        let operationSymbol = null;
 
-        while ( this.symbol !== null && (
+        while ( this.symbol !== null &&
+                this.symbol.symbolCode !== SymbolsCodes.endOfLine && (
                 this.symbol.symbolCode === SymbolsCodes.star ||
                 this.symbol.symbolCode === SymbolsCodes.slash
             )) {
 
-            symbolCode = this.symbol.symbolCode;
-
+            operationSymbol = this.symbol;
             this.nextSym();
 
-            switch (symbolCode) {
+            switch (operationSymbol.symbolCode) {
                 case SymbolsCodes.star:
-                    term = new Multiplication(this.symbol, term, this.scanMultiplier());
+                    term = new Multiplication(operationSymbol, term, this.scanMultiplier());
                     break;
                 case SymbolsCodes.slash:
-                    term = new Division(this.symbol, term, this.scanMultiplier());
+                    term = new Division(operationSymbol, term, this.scanMultiplier());
                     break;
             }
         }
@@ -106,7 +102,6 @@ export class SyntaxAnalyzer
         return term;
     }
 
-    /** Синтаксическая диаграмма "множитель" */
     scanMultiplier()
     {
         let integerConstant = this.symbol;
