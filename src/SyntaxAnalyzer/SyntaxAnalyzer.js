@@ -53,11 +53,10 @@ export class SyntaxAnalyzer
         let term = this.scanTerm();
         let operationSymbol = null;
 
-        while ( this.symbol !== null &&
-                this.symbol.symbolCode !== SymbolsCodes.endOfLine  && (
+        while ( this.symbol !== null && (
                     this.symbol.symbolCode === SymbolsCodes.plus ||
                     this.symbol.symbolCode === SymbolsCodes.minus
-                )) {
+            )) {
 
             operationSymbol = this.symbol;
             this.nextSym();
@@ -80,10 +79,9 @@ export class SyntaxAnalyzer
         let term = this.scanMultiplier();
         let operationSymbol = null;
 
-        while ( this.symbol !== null &&
-                this.symbol.symbolCode !== SymbolsCodes.endOfLine && (
-                this.symbol.symbolCode === SymbolsCodes.star ||
-                this.symbol.symbolCode === SymbolsCodes.slash
+        while ( this.symbol !== null && (
+                    this.symbol.symbolCode === SymbolsCodes.star ||
+                    this.symbol.symbolCode === SymbolsCodes.slash
             )) {
 
             operationSymbol = this.symbol;
