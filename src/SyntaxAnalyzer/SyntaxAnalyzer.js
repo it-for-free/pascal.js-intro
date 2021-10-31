@@ -5,7 +5,9 @@ import { Subtraction } from './Tree/Subtraction';
 import { NumberConstant } from './Tree/NumberConstant';
 import { SymbolsCodes } from '../LexicalAnalyzer/SymbolsCodes';
 
-
+/**
+ * Синтаксический анализатор - отвечат за построения дерева выполнения
+ */
 export class SyntaxAnalyzer
 {
     constructor(lexicalAnalyzer)
@@ -47,7 +49,7 @@ export class SyntaxAnalyzer
 
         return this.tree;
     }
-
+    // Разбор выражения
     scanExpression()
     {
         let term = this.scanTerm();
@@ -73,7 +75,7 @@ export class SyntaxAnalyzer
 
         return term;
     }
-
+    // Разбор слагаемого
     scanTerm()
     {
         let term = this.scanMultiplier();
@@ -99,7 +101,7 @@ export class SyntaxAnalyzer
 
         return term;
     }
-
+    // Разбор множителя
     scanMultiplier()
     {
         let integerConstant = this.symbol;
