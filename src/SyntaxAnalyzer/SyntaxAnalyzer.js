@@ -104,13 +104,15 @@ export class SyntaxAnalyzer
     // Разбор множителя
     scanMultiplier()
     {
+        let integerConstant;
         if (this.symbol?.symbolCode === SymbolsCodes.minus) {
-            let integerConstant = this.nextSym();
+            this.nextSym();
+            integerConstant = this.symbol;
             this.accept(SymbolsCodes.integerConst);
             integerConstant.value = -integerConstant.value;
             
         } else {
-            let integerConstant = this.symbol;
+            integerConstant = this.symbol;
             this.accept(SymbolsCodes.integerConst);
         }
 
