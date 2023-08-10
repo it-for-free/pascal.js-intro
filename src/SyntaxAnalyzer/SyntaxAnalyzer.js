@@ -47,7 +47,7 @@ export class SyntaxAnalyzer
 
         }
 
-        return this.tree;
+        return this.trees;
     }
     // Разбор выражения
     scanExpression()
@@ -104,9 +104,15 @@ export class SyntaxAnalyzer
     // Разбор множителя
     scanMultiplier()
     {
-        let integerConstant = this.symbol;
-
-        this.accept(SymbolsCodes.integerConst);
+        if (this.symbol?.symbolCode === SymbolsCodes.minus) {
+            let integerConstant = this.nextSym();
+            this.accept(SymbolsCodes.integerConst);
+            integerConstant.value = -integerConstant.value;
+            
+        } else {
+            let integerConstant = this.symbol;
+            this.accept(SymbolsCodes.integerConst);
+        }
 
         return new NumberConstant(integerConstant);
     }
