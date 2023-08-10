@@ -39,9 +39,17 @@ export class LexicalAnalyzer
             return null;
         }
 
+        let predWord = this.currentWord;
         this.currentWord = '';
 
-        if (/\d/.exec(this.char) !== null) {
+        if ( isNaN(parseInt(predWord)) && 
+            /[-\d]/.exec(this.char) !== null ) {
+
+            if (/-/.exec(this.char) !== null) {
+                this.currentWord += this.char;
+                this.char = this.fileIO.nextCh();
+                this.skipWhiteSpaces();
+            } 
 
             while (/[\d.]/.exec(this.char) !== null) {
                 this.currentWord += this.char;
