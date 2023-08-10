@@ -4,6 +4,7 @@ import { Subtraction } from '../SyntaxAnalyzer/Tree/Subtraction';
 import { Division } from '../SyntaxAnalyzer/Tree/Division';
 import { NumberConstant } from '../SyntaxAnalyzer/Tree/NumberConstant';
 import { NumberVariable } from './Variables/NumberVariable';
+import { ParenthesizedExpression } from '../SyntaxAnalyzer/Tree/ParenthesizedExpression';
 
 export class Engine
 {
@@ -81,7 +82,10 @@ export class Engine
     {
         if (expression instanceof NumberConstant) {
             return new NumberVariable(expression.symbol.value);
-        } else {
+        } else if (expression instanceof ParenthesizedExpression) {
+            return this.evaluateSimpleExpression(expression.expression);
+        }
+        else {
             throw 'Number Constant expected.';
         }
     }

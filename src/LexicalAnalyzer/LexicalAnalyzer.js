@@ -84,6 +84,12 @@ export class LexicalAnalyzer
                 case '=':
                     this.char = this.fileIO.nextCh();
                     return this.getSymbol(SymbolsCodes.equal);
+                case '(':
+                    this.char = this.fileIO.nextCh();
+                    return this.getSymbol(SymbolsCodes.openingBracket);
+                case ')':
+                    this.char = this.fileIO.nextCh();
+                    return this.getSymbol(SymbolsCodes.closingBracket);
 
             }
         }
