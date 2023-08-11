@@ -1,7 +1,10 @@
-export class ParenthesizedExpression
+import { TreeNodeBase } from './TreeNodeBase';
+
+export class ParenthesizedExpression extends TreeNodeBase
 {
-    constructor(expression)
-    {
+    constructor(symbol, expression)
+    {   
+        super(symbol);
         this.expression = expression;
     }
 }

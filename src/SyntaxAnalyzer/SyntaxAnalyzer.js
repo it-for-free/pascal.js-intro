@@ -106,16 +106,18 @@ export class SyntaxAnalyzer
     // Разбор множителя
     scanMultiplier()
     {
+        let operationSymbol;
         if (this.symbol?.symbolCode === SymbolsCodes.minus) {
-            let operationSymbol = this.symbol;
+            operationSymbol = this.symbol;
             this.nextSym();
             return new UnaryMinus(operationSymbol, this.scanMultiplier());    
         }
         if (this.symbol?.symbolCode === SymbolsCodes.openingBracket) {
+            operationSymbol = this.symbol;
             this.nextSym();
             let expression = this.scanExpression();
             this.accept(SymbolsCodes.closingBracket);
-            return new ParenthesizedExpression(expression);
+            return new ParenthesizedExpression(operationSymbol, expression);
         }
         let integerConstant = this.symbol;
 
