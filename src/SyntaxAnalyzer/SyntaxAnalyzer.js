@@ -6,6 +6,9 @@ import { NumberConstant } from './Tree/NumberConstant';
 import { SymbolsCodes } from '../LexicalAnalyzer/SymbolsCodes';
 import { ParenthesizedExpression } from './Tree/ParenthesizedExpression';
 import { UnaryMinus } from './Tree/Division copy';
+import { variables } from '../Semantics/Variables/Variables';
+import { Assignment } from './Tree/Assignment';
+import { Identifier } from './Tree/Identtifier';
 
 /**
  * Синтаксический анализатор - отвечат за построения дерева выполнения
@@ -37,9 +40,9 @@ export class SyntaxAnalyzer
     analyze()
     {
         this.nextSym();
-
         while (this.symbol !== null) {
             let expression = this.scanExpression();
+
             this.trees.push(expression);
 
             // Последняя строка может не заканчиваться переносом на следующую строку.
@@ -118,6 +121,23 @@ export class SyntaxAnalyzer
             let expression = this.scanExpression();
             this.accept(SymbolsCodes.closingBracket);
             return new ParenthesizedExpression(operationSymbol, expression);
+        }
+        if (this.symbol?.symbolCode === SymbolsCodes.identifier) {
+            let id = this.symbol.value;
+            this.nextSym();
+            if (this.symbol?.symbolCode === SymbolsCodes.equal) {
+                operationSymbol = this.symbol;
+                variables[id] = undefined;
+                this.nextSym();
+                return new Assignment(operationSymbol, new Identifier(id), this.scanExpression());
+            } else {
+                if (id in variables) {
+                    return new Identifier(id);
+                } else {
+                    throw `необъявленная переменная ${id}! Строка `;   
+                }
+            }
+
         }
         let integerConstant = this.symbol;
 

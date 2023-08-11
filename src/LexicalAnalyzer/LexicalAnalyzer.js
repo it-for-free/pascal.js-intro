@@ -53,6 +53,7 @@ export class LexicalAnalyzer
         } else if (/\w/i.exec(this.char) !== null) {
 
             while (/\w/i.exec(this.char) !== null) {
+                if(this.char === null) break;
                 this.currentWord += this.char;
                 this.char = this.fileIO.nextCh();
             }

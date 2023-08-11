@@ -6,6 +6,9 @@ import { NumberConstant } from '../SyntaxAnalyzer/Tree/NumberConstant';
 import { NumberVariable } from './Variables/NumberVariable';
 import { ParenthesizedExpression } from '../SyntaxAnalyzer/Tree/ParenthesizedExpression';
 import { UnaryMinus } from '../SyntaxAnalyzer/Tree/Division copy';
+import { Identifier } from '../SyntaxAnalyzer/Tree/Identtifier';
+import { Assignment } from '../SyntaxAnalyzer/Tree/Assignment';
+import { variables } from './Variables/Variables';
 
 export class Engine
 {
@@ -89,6 +92,12 @@ export class Engine
             let result = this.evaluateMultiplier(expression.operand);
             result.value = -result.value;
             return result;
+        } else if (expression instanceof Identifier) {
+            return variables[expression.symbol];
+        } else if (expression instanceof Assignment) {
+            let id = expression.left.symbol;
+            variables[id] = this.evaluateSimpleExpression(expression.right);
+            return variables[id];
         } else {
             throw 'Number Constant expected.';
         }
