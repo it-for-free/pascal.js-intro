@@ -5,6 +5,7 @@ import { Division } from '../SyntaxAnalyzer/Tree/Division';
 import { NumberConstant } from '../SyntaxAnalyzer/Tree/NumberConstant';
 import { NumberVariable } from './Variables/NumberVariable';
 import { ParenthesizedExpression } from '../SyntaxAnalyzer/Tree/ParenthesizedExpression';
+import { UnaryMinus } from '../SyntaxAnalyzer/Tree/Division copy';
 
 export class Engine
 {
@@ -84,8 +85,11 @@ export class Engine
             return new NumberVariable(expression.symbol.value);
         } else if (expression instanceof ParenthesizedExpression) {
             return this.evaluateSimpleExpression(expression.expression);
-        }
-        else {
+        } else if (expression instanceof UnaryMinus) {
+            let result = this.evaluateMultiplier(expression.operand);
+            result.value = -result.value;
+            return result;
+        } else {
             throw 'Number Constant expected.';
         }
     }

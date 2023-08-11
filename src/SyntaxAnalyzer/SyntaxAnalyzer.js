@@ -5,6 +5,7 @@ import { Subtraction } from './Tree/Subtraction';
 import { NumberConstant } from './Tree/NumberConstant';
 import { SymbolsCodes } from '../LexicalAnalyzer/SymbolsCodes';
 import { ParenthesizedExpression } from './Tree/ParenthesizedExpression';
+import { UnaryMinus } from './Tree/Division copy';
 
 /**
  * Синтаксический анализатор - отвечат за построения дерева выполнения
@@ -105,7 +106,12 @@ export class SyntaxAnalyzer
     // Разбор множителя
     scanMultiplier()
     {
-        if (this.symbol?.symbolCode == SymbolsCodes.openingBracket) {
+        if (this.symbol?.symbolCode === SymbolsCodes.minus) {
+            let operationSymbol = this.symbol;
+            this.nextSym();
+            return new UnaryMinus(operationSymbol, this.scanMultiplier());    
+        }
+        if (this.symbol?.symbolCode === SymbolsCodes.openingBracket) {
             this.nextSym();
             let expression = this.scanExpression();
             this.accept(SymbolsCodes.closingBracket);
