@@ -21,10 +21,13 @@ export class SyntaxAnalyzer
         this.symbol = null;
         this.tree = null;
         this.trees = [];
+        this.counterLine = 0;
+        this.counterSym = 0;
     }
 
     nextSym()
     {
+        this.counterSym++;
         this.symbol = this.lexicalAnalyzer.nextSym();
     }
 
@@ -41,8 +44,10 @@ export class SyntaxAnalyzer
     {
         this.nextSym();
         while (this.symbol !== null) {
+            this.counterLine++;
+            this.counterSym = 0;
             let expression = this.scanExpression();
-
+        
             this.trees.push(expression);
 
             // Последняя строка может не заканчиваться переносом на следующую строку.
@@ -134,7 +139,7 @@ export class SyntaxAnalyzer
                 if (id in variables) {
                     return new Identifier(id);
                 } else {
-                    throw `необъявленная переменная ${id}! Строка `;   
+                    throw `необъявленная переменная ${id}! Строка ${this.counterLine}`;   
                 }
             }
 

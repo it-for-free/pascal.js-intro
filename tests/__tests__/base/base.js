@@ -18,3 +18,7 @@ test('result = -4', () => {
 test('result = -4', () => {
     expect(pjs.engine.results[3]).toBe(-4);
   });
+
+test('result = 2', () => {
+    expect(pjs.engine.results[4]).toBe(2);
+  });
