@@ -4,6 +4,7 @@ import { Addition } from './Tree/Addition';
 import { Subtraction } from './Tree/Subtraction';
 import { NumberConstant } from './Tree/NumberConstant';
 import { SymbolsCodes } from '../LexicalAnalyzer/SymbolsCodes';
+import { UnaryMinus } from './Tree/UnaryMinus';
 
 /**
  * Синтаксический анализатор - отвечат за построения дерева выполнения
@@ -105,17 +106,14 @@ export class SyntaxAnalyzer
     scanMultiplier()
     {
         let integerConstant;
+        let operationSymbol;
         if (this.symbol?.symbolCode === SymbolsCodes.minus) {
+            operationSymbol = this.symbol;
             this.nextSym();
-            integerConstant = this.symbol;
-            this.accept(SymbolsCodes.integerConst);
-            integerConstant.value = -integerConstant.value;
-            
-        } else {
-            integerConstant = this.symbol;
-            this.accept(SymbolsCodes.integerConst);
+            return new UnaryMinus(operationSymbol, this.scanMultiplier());
         }
-
+        integerConstant = this.symbol;
+        this.accept(SymbolsCodes.integerConst);            
         return new NumberConstant(integerConstant);
     }
 };

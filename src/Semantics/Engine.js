@@ -4,6 +4,7 @@ import { Subtraction } from '../SyntaxAnalyzer/Tree/Subtraction';
 import { Division } from '../SyntaxAnalyzer/Tree/Division';
 import { NumberConstant } from '../SyntaxAnalyzer/Tree/NumberConstant';
 import { NumberVariable } from './Variables/NumberVariable';
+import { UnaryMinus } from '../SyntaxAnalyzer/Tree/UnaryMinus';
 
 export class Engine
 {
@@ -81,6 +82,10 @@ export class Engine
     {
         if (expression instanceof NumberConstant) {
             return new NumberVariable(expression.symbol.value);
+        } else if (expression instanceof UnaryMinus) {
+            let result =  this.evaluateMultiplier(expression.operand);
+            result.value = - result.value;
+            return result;
         } else {
             throw 'Number Constant expected.';
         }
