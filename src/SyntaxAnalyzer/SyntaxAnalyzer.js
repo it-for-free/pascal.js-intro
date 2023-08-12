@@ -21,13 +21,10 @@ export class SyntaxAnalyzer
         this.symbol = null;
         this.tree = null;
         this.trees = [];
-        this.counterLine = 0;
-        this.counterSym = 0;
     }
 
     nextSym()
     {
-        this.counterSym++;
         this.symbol = this.lexicalAnalyzer.nextSym();
     }
 
@@ -44,8 +41,7 @@ export class SyntaxAnalyzer
     {
         this.nextSym();
         while (this.symbol !== null) {
-            this.counterLine++;
-            this.counterSym = 0;
+
             let expression = this.scanExpression();
         
             this.trees.push(expression);
@@ -111,15 +107,18 @@ export class SyntaxAnalyzer
 
         return term;
     }
+
     // Разбор множителя
     scanMultiplier()
     {
         let operationSymbol;
+
         if (this.symbol?.symbolCode === SymbolsCodes.minus) {
             operationSymbol = this.symbol;
             this.nextSym();
             return new UnaryMinus(operationSymbol, this.scanMultiplier());    
         }
+
         if (this.symbol?.symbolCode === SymbolsCodes.openingBracket) {
             operationSymbol = this.symbol;
             this.nextSym();
@@ -127,23 +126,19 @@ export class SyntaxAnalyzer
             this.accept(SymbolsCodes.closingBracket);
             return new ParenthesizedExpression(operationSymbol, expression);
         }
+
         if (this.symbol?.symbolCode === SymbolsCodes.identifier) {
             let id = this.symbol.value;
             this.nextSym();
             if (this.symbol?.symbolCode === SymbolsCodes.equal) {
                 operationSymbol = this.symbol;
-                variables[id] = undefined;
                 this.nextSym();
                 return new Assignment(operationSymbol, new Identifier(id), this.scanExpression());
-            } else {
-                if (id in variables) {
-                    return new Identifier(id);
-                } else {
-                    throw `необъявленная переменная ${id}! Строка ${this.counterLine}`;   
-                }
-            }
+            } 
 
+            return new Identifier(id);
         }
+        
         let integerConstant = this.symbol;
 
         this.accept(SymbolsCodes.integerConst);

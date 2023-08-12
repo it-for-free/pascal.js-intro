@@ -22,3 +22,7 @@ test('result = -4', () => {
 test('result = 2', () => {
     expect(pjs.engine.results[4]).toBe(2);
   });
+
+test('result = 1', () => {
+    expect(pjs.engine.results[5]).toBe(1);
+  });

@@ -23,6 +23,9 @@ export class Engine
     {
         this.trees = trees;
         this.results = [];
+        this.counterLine = 0;
+        this.counterSym = 0;
+
     }
 
     run()
@@ -33,6 +36,8 @@ export class Engine
 
             function(tree)
             {
+                self.counterLine++;
+                self.counterSym = 0;
                 let result = self.evaluateSimpleExpression(tree);
                 console.log(result.value);
                 self.results.push(result.value); // пишем в массив результатов
@@ -47,13 +52,16 @@ export class Engine
                 expression instanceof Subtraction) {
 
             let leftOperand = this.evaluateSimpleExpression(expression.left);
+            this.counterSym++;
             let rightOperand = this.evaluateSimpleExpression(expression.right);
 
             let result = null;
             if (expression instanceof Addition) {
                 result = leftOperand.value + rightOperand.value;
+
             } else if (expression instanceof Subtraction) {
                 result = leftOperand.value - rightOperand.value;
+
             }
 
             return new NumberVariable(result);
@@ -65,15 +73,20 @@ export class Engine
     evaluateTerm(expression)
     {
         if (expression instanceof Multiplication) {
+
             let leftOperand = this.evaluateTerm(expression.left);
+            this.counterSym++;
             let rightOperand = this.evaluateTerm(expression.right);
 
             let result = leftOperand.value * rightOperand.value;
 
             return new NumberVariable(result);
         } else if (expression instanceof Division) {
+
             let leftOperand = this.evaluateTerm(expression.left);
+            this.counterSym++;
             let rightOperand = this.evaluateTerm(expression.right);
+            
             let result = leftOperand.value / rightOperand.value;
 
             return new NumberVariable(result);
@@ -84,22 +97,40 @@ export class Engine
 
     evaluateMultiplier(expression)
     {
-        if (expression instanceof NumberConstant) {
-            return new NumberVariable(expression.symbol.value);
+        let result;
+
+        if (expression instanceof NumberConstant) { 
+            result = new NumberVariable(expression.symbol.value);
+            this.counterSym++;
+
         } else if (expression instanceof ParenthesizedExpression) {
-            return this.evaluateSimpleExpression(expression.expression);
+            this.counterSym++;
+            result = this.evaluateSimpleExpression(expression.expression);  
+            this.counterSym++;
+
         } else if (expression instanceof UnaryMinus) {
-            let result = this.evaluateMultiplier(expression.operand);
+            this.counterSym++;
+            result = this.evaluateMultiplier(expression.operand);
             result.value = -result.value;
-            return result;
+
         } else if (expression instanceof Identifier) {
-            return variables[expression.symbol];
+            result = variables[expression.symbol];
+            this.counterSym++;
+            if (result === undefined) {
+                throw(`uninitialized variable ${expression.symbol}! Line ${this.counterLine}, sym ${this.counterSym}`);
+            }
+
         } else if (expression instanceof Assignment) {
             let id = expression.left.symbol;
             variables[id] = this.evaluateSimpleExpression(expression.right);
-            return variables[id];
+            this.counterSym++;
+            result = variables[id];
+
         } else {
             throw 'Number Constant expected.';
         }
+
+        return result;
+        
     }
 };
