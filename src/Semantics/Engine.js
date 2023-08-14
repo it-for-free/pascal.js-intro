@@ -111,7 +111,7 @@ export class Engine
         } else if (expression instanceof UnaryMinus) {
             this.counterSym++;
             result = this.evaluateMultiplier(expression.operand);
-            result.value = -result.value;
+            result = new NumberVariable(-result.value);
 
         } else if (expression instanceof Identifier) {
             result = variables[expression.symbol];
