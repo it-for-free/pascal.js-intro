@@ -4,6 +4,11 @@ import { Addition } from './Tree/Addition';
 import { Subtraction } from './Tree/Subtraction';
 import { NumberConstant } from './Tree/NumberConstant';
 import { SymbolsCodes } from '../LexicalAnalyzer/SymbolsCodes';
+import { ParenthesizedExpression } from './Tree/ParenthesizedExpression';
+import { UnaryMinus } from './Tree/Division copy';
+import { variables } from '../Semantics/Variables/Variables';
+import { Assignment } from './Tree/Assignment';
+import { Identifier } from './Tree/Identtifier';
 
 /**
  * Синтаксический анализатор - отвечат за построения дерева выполнения
@@ -25,19 +30,20 @@ export class SyntaxAnalyzer
 
     accept(expectedSymbolCode)
     {
-        if (this.symbol.symbolCode === expectedSymbolCode) {
+        if (this.symbol?.symbolCode === expectedSymbolCode) {
             this.nextSym();
         } else {
-            throw `${expectedSymbolCode} expected but ${this.symbol.symbolCode} found!`;
+            throw `${expectedSymbolCode} expected but ${this.symbol?.symbolCode} found!`;
         }
     }
 
     analyze()
     {
         this.nextSym();
-
         while (this.symbol !== null) {
+
             let expression = this.scanExpression();
+        
             this.trees.push(expression);
 
             // Последняя строка может не заканчиваться переносом на следующую строку.
@@ -101,9 +107,38 @@ export class SyntaxAnalyzer
 
         return term;
     }
+
     // Разбор множителя
     scanMultiplier()
     {
+        let operationSymbol;
+
+        if (this.symbol?.symbolCode === SymbolsCodes.minus) {
+            operationSymbol = this.symbol;
+            this.nextSym();
+            return new UnaryMinus(operationSymbol, this.scanMultiplier());    
+        }
+
+        if (this.symbol?.symbolCode === SymbolsCodes.openingBracket) {
+            operationSymbol = this.symbol;
+            this.nextSym();
+            let expression = this.scanExpression();
+            this.accept(SymbolsCodes.closingBracket);
+            return new ParenthesizedExpression(operationSymbol, expression);
+        }
+
+        if (this.symbol?.symbolCode === SymbolsCodes.identifier) {
+            let id = this.symbol.value;
+            this.nextSym();
+            if (this.symbol?.symbolCode === SymbolsCodes.equal) {
+                operationSymbol = this.symbol;
+                this.nextSym();
+                return new Assignment(operationSymbol, new Identifier(id), this.scanExpression());
+            } 
+
+            return new Identifier(id);
+        }
+        
         let integerConstant = this.symbol;
 
         this.accept(SymbolsCodes.integerConst);

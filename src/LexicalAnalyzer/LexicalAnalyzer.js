@@ -53,6 +53,7 @@ export class LexicalAnalyzer
         } else if (/\w/i.exec(this.char) !== null) {
 
             while (/\w/i.exec(this.char) !== null) {
+                if(this.char === null) break;
                 this.currentWord += this.char;
                 this.char = this.fileIO.nextCh();
             }
@@ -84,6 +85,12 @@ export class LexicalAnalyzer
                 case '=':
                     this.char = this.fileIO.nextCh();
                     return this.getSymbol(SymbolsCodes.equal);
+                case '(':
+                    this.char = this.fileIO.nextCh();
+                    return this.getSymbol(SymbolsCodes.openingBracket);
+                case ')':
+                    this.char = this.fileIO.nextCh();
+                    return this.getSymbol(SymbolsCodes.closingBracket);
 
             }
         }
