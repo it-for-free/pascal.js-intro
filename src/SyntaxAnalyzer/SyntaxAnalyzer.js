@@ -4,6 +4,8 @@ import { Addition } from './Tree/Addition';
 import { Subtraction } from './Tree/Subtraction';
 import { NumberConstant } from './Tree/NumberConstant';
 import { SymbolsCodes } from '../LexicalAnalyzer/SymbolsCodes';
+import { ParenthesizedExpression } from './Tree/ParenthesizedExpression';
+import { UnaryMinus } from './Tree/Division copy';
 
 /**
  * Синтаксический анализатор - отвечат за построения дерева выполнения
@@ -25,10 +27,10 @@ export class SyntaxAnalyzer
 
     accept(expectedSymbolCode)
     {
-        if (this.symbol.symbolCode === expectedSymbolCode) {
+        if (this.symbol?.symbolCode === expectedSymbolCode) {
             this.nextSym();
         } else {
-            throw `${expectedSymbolCode} expected but ${this.symbol.symbolCode} found!`;
+            throw `${expectedSymbolCode} expected but ${this.symbol?.symbolCode} found!`;
         }
     }
 
@@ -104,6 +106,19 @@ export class SyntaxAnalyzer
     // Разбор множителя
     scanMultiplier()
     {
+        let operationSymbol;
+        if (this.symbol?.symbolCode === SymbolsCodes.minus) {
+            operationSymbol = this.symbol;
+            this.nextSym();
+            return new UnaryMinus(operationSymbol, this.scanMultiplier());    
+        }
+        if (this.symbol?.symbolCode === SymbolsCodes.openingBracket) {
+            operationSymbol = this.symbol;
+            this.nextSym();
+            let expression = this.scanExpression();
+            this.accept(SymbolsCodes.closingBracket);
+            return new ParenthesizedExpression(operationSymbol, expression);
+        }
         let integerConstant = this.symbol;
 
         this.accept(SymbolsCodes.integerConst);
