@@ -6,6 +6,6 @@
         "jest": "^29.7.0"
     },
     "scripts": {
-        "test": "node node_modules/.bin/jest tests/__tests__"
+        "test": "node --experimental-vm-modules node_modules/.bin/jest tests/__tests__"
     }
 }
