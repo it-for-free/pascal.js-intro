@@ -1,4 +1,4 @@
-import { TreeNodeBase } from './TreeNodeBase';
+import { TreeNodeBase } from './TreeNodeBase.js';
 
 export class NumberConstant extends TreeNodeBase
 {

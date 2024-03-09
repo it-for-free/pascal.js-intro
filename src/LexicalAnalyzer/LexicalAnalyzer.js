@@ -1,7 +1,7 @@
-import { FileIO } from '../IO/FileIO';
-import { IntegerConstant } from '../LexicalAnalyzer/Symbols/IntegerConstant';
-import { Symbol } from '../LexicalAnalyzer/Symbols/Symbol';
-import { SymbolsCodes } from './SymbolsCodes';
+import { FileIO } from '../IO/FileIO.js';
+import { IntegerConstant } from '../LexicalAnalyzer/Symbols/IntegerConstant.js';
+import { Symbol } from '../LexicalAnalyzer/Symbols/Symbol.js';
+import { SymbolsCodes } from './SymbolsCodes.js';
 
 
 export class LexicalAnalyzer

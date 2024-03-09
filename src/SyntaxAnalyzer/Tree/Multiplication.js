@@ -1,4 +1,4 @@
-import { BinaryOperation } from './BinaryOperation';
+import { BinaryOperation } from './BinaryOperation.js';
 
 export class Multiplication extends BinaryOperation
 {

@@ -1,9 +1,9 @@
-import { Multiplication } from './Tree/Multiplication';
-import { Division } from './Tree/Division';
-import { Addition } from './Tree/Addition';
-import { Subtraction } from './Tree/Subtraction';
-import { NumberConstant } from './Tree/NumberConstant';
-import { SymbolsCodes } from '../LexicalAnalyzer/SymbolsCodes';
+import { Multiplication } from './Tree/Multiplication.js';
+import { Division } from './Tree/Division.js';
+import { Addition } from './Tree/Addition.js';
+import { Subtraction } from './Tree/Subtraction.js';
+import { NumberConstant } from './Tree/NumberConstant.js';
+import { SymbolsCodes } from '../LexicalAnalyzer/SymbolsCodes.js';
 
 /**
  * Синтаксический анализатор - отвечат за построения дерева выполнения
