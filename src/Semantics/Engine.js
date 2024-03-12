@@ -1,9 +1,9 @@
-import { Addition } from '../SyntaxAnalyzer/Tree/Addition.js';
-import { Multiplication } from '../SyntaxAnalyzer/Tree/Multiplication.js';
-import { Subtraction } from '../SyntaxAnalyzer/Tree/Subtraction.js';
-import { Division } from '../SyntaxAnalyzer/Tree/Division.js';
-import { NumberConstant } from '../SyntaxAnalyzer/Tree/NumberConstant.js';
-import { NumberVariable } from './Variables/NumberVariable.js';
+import { Addition } from '../SyntaxAnalyzer/Tree/Addition';
+import { Multiplication } from '../SyntaxAnalyzer/Tree/Multiplication';
+import { Subtraction } from '../SyntaxAnalyzer/Tree/Subtraction';
+import { Division } from '../SyntaxAnalyzer/Tree/Division';
+import { NumberConstant } from '../SyntaxAnalyzer/Tree/NumberConstant';
+import { NumberVariable } from './Variables/NumberVariable';
 
 export class Engine
 {

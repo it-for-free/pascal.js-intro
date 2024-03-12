@@ -1,4 +1,4 @@
-import { SymbolBase } from './SymbolBase.js';
+import { SymbolBase } from './SymbolBase';
 
 export class Symbol extends SymbolBase
 {

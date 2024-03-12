@@ -1,5 +1,5 @@
 
-import { runFile, insp } from '../../helpers/testsHelper.js';
+import { runFile, insp } from '../../helpers/testsHelper';
 
 let pjs = runFile(import.meta.url, 'base.code');
 

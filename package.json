@@ -3,9 +3,15 @@
     "description": "How to start code PascalJS",
     "type": "module",
     "devDependencies": {
-        "jest": "^29.7.0"
+        "@types/jest": "^29.5.12",
+        "@types/node": "^20.11.26",
+        "jest": "^29.7.0",
+        "ts-jest": "^29.1.2",
+        "typescript": "^5.4.2"
     },
     "scripts": {
-        "test": "node --experimental-vm-modules node_modules/.bin/jest tests/__tests__"
+        "test": "node --experimental-vm-modules node_modules/.bin/jest tests/__tests__",
+        "testts": "npx tsx node_modules/.bin/jest tests/__tests__",
+        "test2": "jest tests/__tests__"
     }
 }

@@ -1,6 +1,6 @@
 import { fileURLToPath } from 'url';
 import { dirname } from 'path';
-import {PascalJs} from '../../src/PascalJs/PascalJs.js';
+import {PascalJs} from '../../src/PascalJs/PascalJs';
 import util from 'util';
 
 export function getFullPath(ImportMetaUrlData, fileName) {

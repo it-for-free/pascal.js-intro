@@ -1,4 +1,4 @@
-import { TreeNodeBase } from './TreeNodeBase.js';
+import { TreeNodeBase } from './TreeNodeBase';
 
 export class BinaryOperation extends TreeNodeBase
 {
