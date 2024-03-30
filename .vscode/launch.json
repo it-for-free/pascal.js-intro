@@ -12,8 +12,9 @@
             "skipFiles": [
                 "<node_internals>/**"
             ],
-            "program": "${workspaceFolder}/run.js",
+            "program": "${workspaceFolder}/run.ts",
             "runtimeArgs": [  
+                "--loader=ts-node/esm",
                 "--es-module-specifier-resolution=node",
             ],
             "console": "integratedTerminal",

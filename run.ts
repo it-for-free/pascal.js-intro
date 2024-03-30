@@ -1,7 +1,7 @@
-import { FileIO } from './src/IO/FileIO.js';
-import { LexicalAnalyzer } from './src/LexicalAnalyzer/LexicalAnalyzer.js';
-import { SyntaxAnalyzer } from './src/SyntaxAnalyzer/SyntaxAnalyzer.js';
-import { Engine } from './src/Semantics/Engine.js';
+import { FileIO } from './src/IO/FileIO';
+import { LexicalAnalyzer } from './src/LexicalAnalyzer/LexicalAnalyzer';
+import { SyntaxAnalyzer } from './src/SyntaxAnalyzer/SyntaxAnalyzer';
+import { Engine } from './src/Semantics/Engine';
 
 let fileIO = new FileIO('example.code');
 

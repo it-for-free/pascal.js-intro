@@ -1,8 +1,8 @@
 
-import { FileIO } from '../IO/FileIO.js';
-import { LexicalAnalyzer } from '../LexicalAnalyzer/LexicalAnalyzer.js';
-import { SyntaxAnalyzer } from '../SyntaxAnalyzer/SyntaxAnalyzer.js';
-import { Engine } from '../Semantics/Engine.js';
+import { FileIO } from '../IO/FileIO';
+import { LexicalAnalyzer } from '../LexicalAnalyzer/LexicalAnalyzer';
+import { SyntaxAnalyzer } from '../SyntaxAnalyzer/SyntaxAnalyzer';
+import { Engine } from '../Semantics/Engine';
 
 /**
  * Основной файл проекта, предоставляющий возможность интерпретировать код
