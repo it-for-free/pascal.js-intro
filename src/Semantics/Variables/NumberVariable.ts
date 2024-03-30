@@ -1,6 +1,8 @@
 export class NumberVariable
 {
-    constructor(value)
+    value: number;
+
+    constructor(value: number)
     {
         this.value = value;
     }

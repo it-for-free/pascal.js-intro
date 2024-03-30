@@ -4,30 +4,32 @@ import { Subtraction } from '../SyntaxAnalyzer/Tree/Subtraction';
 import { Division } from '../SyntaxAnalyzer/Tree/Division';
 import { NumberConstant } from '../SyntaxAnalyzer/Tree/NumberConstant';
 import { NumberVariable } from './Variables/NumberVariable';
+import { TreeNodeBase } from '../SyntaxAnalyzer/Tree/TreeNodeBase';
 
-export class Engine
-{
+export class Engine {
     /**
      * Результаты вычислений (изначально - один для каждой строки)
-     * 
-     * @type string[]
      */
-    results;
+    results: number[];
 
-    constructor(trees)
-    {
+    /**
+     * Деревья, которые получает на вход движок,
+     * тип в данном случае определен как TreeNodeBase, потому что на верхнем уровне любого уровня 
+     * лежит какой-то узел, описывающий по сути "последнюю" по вложенности операцию
+     */
+    trees: TreeNodeBase[];
+
+    constructor(trees: TreeNodeBase[]) {
         this.trees = trees;
         this.results = [];
     }
 
-    run()
-    {
+    run() {
         let self = this;
 
         this.trees.forEach(
 
-            function(tree)
-            {
+            function (tree) {
                 let result = self.evaluateSimpleExpression(tree);
                 console.log(result.value);
                 self.results.push(result.value); // пишем в массив результатов
@@ -36,29 +38,29 @@ export class Engine
 
     }
 
-    evaluateSimpleExpression(expression)
-    {
-        if (expression instanceof Addition ||
-                expression instanceof Subtraction) {
+    evaluateSimpleExpression(expression: TreeNodeBase): NumberVariable {
+
+        if (expression instanceof Addition
+            || expression instanceof Subtraction) {
 
             let leftOperand = this.evaluateSimpleExpression(expression.left);
             let rightOperand = this.evaluateSimpleExpression(expression.right);
 
-            let result = null;
+            let result: number | null = null;
             if (expression instanceof Addition) {
                 result = leftOperand.value + rightOperand.value;
             } else if (expression instanceof Subtraction) {
                 result = leftOperand.value - rightOperand.value;
             }
 
-            return new NumberVariable(result);
+            return new NumberVariable(result as number);
+
         } else {
             return this.evaluateTerm(expression);
         }
     }
 
-    evaluateTerm(expression)
-    {
+    evaluateTerm(expression: TreeNodeBase) {
         if (expression instanceof Multiplication) {
             let leftOperand = this.evaluateTerm(expression.left);
             let rightOperand = this.evaluateTerm(expression.right);
@@ -77,8 +79,7 @@ export class Engine
         }
     }
 
-    evaluateMultiplier(expression)
-    {
+    evaluateMultiplier(expression: TreeNodeBase) {
         if (expression instanceof NumberConstant) {
             return new NumberVariable(expression.symbol.value);
         } else {
