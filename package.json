@@ -10,8 +10,6 @@
         "typescript": "^5.4.2"
     },
     "scripts": {
-        "test": "node --experimental-vm-modules node_modules/.bin/jest tests/__tests__",
-        "testts": "npx tsx node_modules/.bin/jest tests/__tests__",
-        "test2": "jest tests/__tests__"
+        "test": "node --experimental-vm-modules node_modules/.bin/jest tests/__tests__"
     }
 }
