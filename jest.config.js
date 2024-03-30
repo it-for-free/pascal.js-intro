@@ -1,4 +1,4 @@
-export  default  {
+export default {
   moduleDirectories: ['node_modules', '<rootDir>'],
   preset: 'ts-jest',
   testEnvironment: 'node',
@@ -9,6 +9,6 @@ export  default  {
       {
         "useESM": true
       }
-  ]
+    ]
   },
 };
