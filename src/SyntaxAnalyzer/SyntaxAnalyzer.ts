@@ -10,74 +10,68 @@ import { SymbolBase } from '../LexicalAnalyzer/Symbols/SymbolBase';
 import { BinaryOperation } from './Tree/BinaryOperation';
 
 /**
- * Синтаксический анализатор - отвечат за построения дерева выполнения
- * 
- * @todo Уточнить возвращаемые типы
+ * Синтаксический анализатор - отвечает за построение синтаксического дерева
  */
 export class SyntaxAnalyzer {
 
     lexicalAnalyzer: LexicalAnalyzer;
-
-
     symbol: SymbolBase | null;
-    tree: TreeNodeBase | null;
 
     /**
-     * Деревья, которые будут построены (напр. для каждой строки исходного кода)
+     * Деревья, которые будут построены (например, для каждой строки исходного кода)
      */
     trees: TreeNodeBase[];
 
     constructor(lexicalAnalyzer: LexicalAnalyzer) {
         this.lexicalAnalyzer = lexicalAnalyzer;
         this.symbol = null;
-        this.tree = null;
         this.trees = [];
     }
 
     /**
-     * Перемещаемся по последовательности "символов" лексического анализотора
+     * Перемещаемся по последовательности "символов" лексического анализатора,
      * получая очередной "символ" ("слово")
      */
     nextSym(): void {
         this.symbol = this.lexicalAnalyzer.nextSym();
     }
 
-    accept(expectedSymbolCode): void {
-        if (this.symbol !== null && this.symbol.symbolCode === expectedSymbolCode) {
+    accept(expectedSymbolCode: string): void {
+        if (this.symbol === null) {
+            throw `${expectedSymbolCode} expected but END OF FILE found!`;
+        }
+
+        if (this.symbol.symbolCode === expectedSymbolCode) {
             this.nextSym();
         } else {
-            throw `${expectedSymbolCode} expected but ${this.symbol?.symbolCode} found!`;
+            throw `${expectedSymbolCode} expected but ${this.symbol.symbolCode} found!`;
         }
     }
 
-    analyze() {
+    analyze(): TreeNodeBase[] {
         this.nextSym();
 
         while (this.symbol !== null) {
-            let expression = this.scanExpression();
+            let expression: TreeNodeBase = this.scanExpression();
 
-            if (expression) {
-                this.trees.push(expression);
-            }
+            this.trees.push(expression);
 
             // Последняя строка может не заканчиваться переносом на следующую строку.
             if (this.symbol !== null) {
                 this.accept(SymbolsCodes.endOfLine);
             }
-
         }
 
-        return this.tree;
+        return this.trees;
     }
 
     /**
      * Разбор выражения
      */
-    scanExpression(): TreeNodeBase | null {
-        let term = this.scanTerm();
+    scanExpression(): TreeNodeBase {
+        let term: TreeNodeBase = this.scanTerm();
         let operationSymbol: SymbolBase | null = null;
 
-        if (term) {
         while (this.symbol !== null && (
             this.symbol.symbolCode === SymbolsCodes.plus ||
             this.symbol.symbolCode === SymbolsCodes.minus
@@ -86,12 +80,8 @@ export class SyntaxAnalyzer {
             operationSymbol = this.symbol;
             this.nextSym();
 
-             /**
-             *  @todo Проверить: нормальный ли вариант добавления  secondTerm  (нужна прлверка на null) 
-             */ 
-            let secondTerm = this.scanTerm();
+            let secondTerm: TreeNodeBase = this.scanTerm();
 
-            if ( secondTerm ) {
             switch (operationSymbol.symbolCode) {
                 case SymbolsCodes.plus:
                     term = new Addition(operationSymbol, term, secondTerm);
@@ -101,8 +91,6 @@ export class SyntaxAnalyzer {
                     break;
             }
         }
-        }
-    }
 
         return term;
     }
@@ -110,35 +98,27 @@ export class SyntaxAnalyzer {
     /**
      * Разбор "слагаемого"
      */
-    scanTerm(): TreeNodeBase | null{
-        let multiplier = this.scanMultiplier();
+    scanTerm(): TreeNodeBase {
+        let multiplier: TreeNodeBase = this.scanMultiplier();
         let operationSymbol: SymbolBase | null = null;
 
-        if (multiplier !== null) {
-            while (this.symbol !== null && (
-                this.symbol.symbolCode === SymbolsCodes.star ||
-                this.symbol.symbolCode === SymbolsCodes.slash
-            )) {
+        while (this.symbol !== null && (
+            this.symbol.symbolCode === SymbolsCodes.star ||
+            this.symbol.symbolCode === SymbolsCodes.slash
+        )) {
 
-                operationSymbol = this.symbol;
-                this.nextSym();
+            operationSymbol = this.symbol;
+            this.nextSym();
 
-                /**
-                 *  @todo Проверить: нормальный ли вариант добавления  secondMultiplier  (нужна прлверка на null) 
-                 */ 
-                let secondTerm = this.scanMultiplier();
+            let secondTerm: TreeNodeBase = this.scanMultiplier();
 
-                if (secondTerm !== null) {
-
-                    switch (operationSymbol.symbolCode) {
-                        case SymbolsCodes.star:
-                            multiplier = new Multiplication(operationSymbol, multiplier, secondTerm);
-                            break;
-                        case SymbolsCodes.slash:
-                            multiplier = new Division(operationSymbol, multiplier, secondTerm);
-                            break;
-                    }
-                }
+            switch (operationSymbol.symbolCode) {
+                case SymbolsCodes.star:
+                    multiplier = new Multiplication(operationSymbol, multiplier, secondTerm);
+                    break;
+                case SymbolsCodes.slash:
+                    multiplier = new Division(operationSymbol, multiplier, secondTerm);
+                    break;
             }
         }
 
@@ -146,17 +126,13 @@ export class SyntaxAnalyzer {
     }
 
     /**
-     *  Разбор "множителя" 
+     *  Разбор "множителя"
      */
-    scanMultiplier(): NumberConstant | null {
+    scanMultiplier(): NumberConstant {
         let integerConstant: SymbolBase | null = this.symbol;
 
-        this.accept(SymbolsCodes.integerConst); // проверим, что текущий символ это именно константа, а не что-то еще 
+        this.accept(SymbolsCodes.integerConst); // проверим, что текущий символ это именно константа, а не что-то еще
 
-        if (integerConstant !== null) {
-            return new NumberConstant(integerConstant);
-        } else {
-            return null;
-        }
+        return new NumberConstant(integerConstant);
     }
 };
