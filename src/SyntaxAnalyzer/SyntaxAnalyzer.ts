@@ -7,7 +7,7 @@ import { SymbolsCodes } from '../LexicalAnalyzer/SymbolsCodes';
 import { LexicalAnalyzer } from '../LexicalAnalyzer/LexicalAnalyzer';
 import { TreeNodeBase } from './Tree/TreeNodeBase';
 import { SymbolBase } from '../LexicalAnalyzer/Symbols/SymbolBase';
-import { BinaryOperation } from './Tree/BinaryOperation';
+import { UnaryMinus } from './Tree/UnaryMinus';
 
 /**
  * Синтаксический анализатор - отвечает за построение синтаксического дерева
@@ -80,6 +80,11 @@ export class SyntaxAnalyzer {
             operationSymbol = this.symbol;
             this.nextSym();
 
+            // Когда ожидается очередной "символ", т.е. выражение не завершено.
+            if (this.symbol === null) {
+                throw 'The expression is not completed.';
+            }
+
             let secondTerm: TreeNodeBase = this.scanTerm();
 
             switch (operationSymbol.symbolCode) {
@@ -128,11 +133,22 @@ export class SyntaxAnalyzer {
     /**
      *  Разбор "множителя"
      */
-    scanMultiplier(): NumberConstant {
-        let integerConstant: SymbolBase | null = this.symbol;
+    scanMultiplier(): TreeNodeBase {
+        let multiplier: TreeNodeBase;
+        let operationSymbol: SymbolBase | null = null;
 
-        this.accept(SymbolsCodes.integerConst); // проверим, что текущий символ это именно константа, а не что-то еще
+        if (this.symbol !== null && this.symbol.symbolCode === SymbolsCodes.minus) {
+            operationSymbol = this.symbol;
+            this.nextSym();
+            multiplier = this.scanMultiplier(); // рекурсивный вызов для обработки унарного минуса
+            multiplier = new UnaryMinus(operationSymbol, multiplier);
+        } else if (this.symbol !== null && this.symbol.symbolCode === SymbolsCodes.integerConst) {
+            multiplier = new NumberConstant(this.symbol);
+            this.accept(SymbolsCodes.integerConst);
+        } else {
+            throw 'Number expected';
+        }
 
-        return new NumberConstant(integerConstant);
+        return multiplier;
     }
-};
+}

@@ -4,16 +4,12 @@ export class SymbolBase
 {
 
     symbolCode: SymbolsCodes;
-    stringValue: SymbolsCodes;
+    stringValue: string;
     value: number;
-
-    /**
-     * @todo Разобраться тут с типами - почему дублируются
-     */
     constructor(symbolCode: SymbolsCodes, stringValue: string, value: number)
     {
         this.symbolCode = symbolCode;
-        this.stringValue = symbolCode;
+        this.stringValue = stringValue;
         this.value = value;
     }
 }
